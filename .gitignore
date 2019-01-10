@@ -1,5 +1,8 @@
-# Ignore Object files
+# Ignore object files
 *.o
 
 # Ignore library file
 *.a
+
+# Ignore test file
+test/libvectortest
