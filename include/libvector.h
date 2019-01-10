@@ -27,7 +27,7 @@ void destroy_vector(vector_t *vector);
 void printf_vector(const vector_t vector, const char *format);
 
 /* Copy a vector */
-void copy_vector(const vector_t vector_dest, const vector_t vector_src);
+vector_t copy_vector(const vector_t vector);
 
 /* Create a new vector using a string */
 vector_t string_to_vector(const char string[]);

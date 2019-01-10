@@ -40,7 +40,7 @@ void vector_print_test()
 void vector_setup_test()
 {
 	vector_t vector1 = create_vector(4);
-	vector_t vector2 = create_vector(4);
+	vector_t vector2 = NULL;
 	vector_t vector3 = NULL;
 
 	puts("==== fill_vector test ====");
@@ -53,7 +53,7 @@ void vector_setup_test()
 
 	puts("==== copy_vector test ====");
 	fill_vector(vector1, 3.0);
-	copy_vector(vector2, vector1);
+	vector2 = copy_vector(vector1);
 
 	for(unsigned int i = 0; i < vector2->dimension; i++)
 		assert(vector2->components[i] == 3.0);
