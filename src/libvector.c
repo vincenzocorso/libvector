@@ -31,6 +31,9 @@ void destroy_vector(vector_t *vector)
 /* Print the components of a vector using custom format specifier */
 void printf_vector(const vector_t vector, const char *format)
 {
+	if(vector == NULL)
+		return;
+
 	for(unsigned int i = 0; i < vector->dimension; i++)
 		printf(format, vector->components[i]);
 
@@ -38,13 +41,17 @@ void printf_vector(const vector_t vector, const char *format)
 }
 
 /* Copy a vector */
-void copy_vector(const vector_t vector_dest, const vector_t vector_src)
+vector_t copy_vector(const vector_t vector)
 {
-	if(vector_dest == NULL || vector_src == NULL)
-		return;
+	if(vector == NULL)
+		return NULL;
 
-	for(unsigned int i = 0; i < vector_dest->dimension; i++)
-		vector_dest->components[i] = vector_src->components[i];
+	vector_t result = create_vector(vector->dimension);
+
+	for(unsigned int i = 0; i < result->dimension; i++)
+		result->components[i] = vector->components[i];
+
+	return result;
 }
 
 /* Create a new vector using a string */
@@ -76,14 +83,40 @@ vector_t string_to_vector(const char string[])
 /* Fill all components of a vector with a new value */
 void fill_vector(const vector_t vector, const double new_value)
 {
+	if(vector == NULL)
+		return;
+
 	for(unsigned int i = 0; i < vector->dimension; i++)
 		vector->components[i] = new_value;
+}
+
+/* Increase vector dimension and push a new element in the selected position */
+void vector_push(const vector_t vector, const double new_value, const unsigned int position)
+{
+	if(vector == NULL || position > vector->dimension)
+		return;
+
+	vector->components = (double *)realloc(vector->components, (vector->dimension + 1) * sizeof(double));
+	memmove(vector->components + position + 1, vector->components + position, (vector->dimension - position) * sizeof(double));
+	vector->dimension += 1;
+	vector->components[position] = new_value;
+}
+
+/* Decrease vector dimension and pop a element from the selected position */
+void vector_pop(const vector_t vector, const unsigned int position)
+{
+	if(vector == NULL || position > vector->dimension - 1)
+		return;
+
+	memmove(vector->components + position, vector->components + position + 1, (vector->dimension - position - 1) * sizeof(double));
+	vector->components = (double *)realloc(vector->components, (vector->dimension - 1) * sizeof(double));
+	vector->dimension -= 1;
 }
 
 /* Return the sum of two vectors */
 vector_t sum_vector(const vector_t vector1, const vector_t vector2)
 {
-	if(vector1->dimension != vector2->dimension)
+	if(vector1 == NULL || vector2 == NULL || vector1->dimension != vector2->dimension)
 		return NULL;
 
 	vector_t vector = create_vector(vector1->dimension);
@@ -96,7 +129,10 @@ vector_t sum_vector(const vector_t vector1, const vector_t vector2)
 /* Calculate the dot product between two vectors */
 double dot_product(const vector_t vector1, const vector_t vector2)
 {
-	// Check vector1 and vector2 dimension?
+	// Return error ?
+	/*if(vector1 == NULL || vector2 == NULL || vector1->dimension != vector2->dimension)
+		return;*/
+
 	double sum = 0.0;
 	for(unsigned int i = 0; i < vector1->dimension; i++)
 		sum += vector1->components[i] * vector2->components[i];
@@ -107,7 +143,7 @@ double dot_product(const vector_t vector1, const vector_t vector2)
 /* Calculate the cross product between two vectors */
 vector_t cross_product(const vector_t vector1, const vector_t vector2)
 {
-	if(vector1->dimension != 3 || vector2->dimension != 3) // cross_product is defined in R^3
+	if(vector1 == NULL || vector2 == NULL || vector1->dimension != 3 || vector2->dimension != 3) // cross_product is defined in R^3
 		return NULL;
 
 	vector_t vector = create_vector(3);
@@ -121,6 +157,9 @@ vector_t cross_product(const vector_t vector1, const vector_t vector2)
 /* Calculate the product beetween a vector and a scalar */
 void vector_scalar_multiplication(const vector_t vector, const double scalar)
 {
+	if(vector == NULL)
+		return;
+
 	for(unsigned int i = 0; i < vector->dimension; i++)
 		vector->components[i] *= scalar;
 }
@@ -128,15 +167,35 @@ void vector_scalar_multiplication(const vector_t vector, const double scalar)
 /* Calculate the magnitude of a vector */
 double vector_magnitude(const vector_t vector)
 {
+	// return error ?
+	/*if(vector == NULL)
+		return;*/
+
 	return sqrt(dot_product(vector, vector));
 }
 
 /* Calculate the normalized vector */
 void vector_normalize(const vector_t vector)
 {
+	if(vector == NULL)
+		return;
+
 	const double magnitude = vector_magnitude(vector);
 	
 	if(magnitude)
 		for(unsigned int i = 0; i < vector->dimension; i++)
 			vector->components[i] /= magnitude;
+}
+
+/* Calculate the angle in radians between two vectors */
+double vector_angle(const vector_t vector1, const vector_t vector2)
+{
+	// Return error ?
+	/*if(vector1 == NULL || vector2 == NULL)
+		return;*/
+
+	double dp = fabs(dot_product(vector1, vector2));
+	double lenght1 = vector_magnitude(vector1);
+	double lenght2 = vector_magnitude(vector2);
+	return acos(dp / (lenght1 * lenght2));
 }

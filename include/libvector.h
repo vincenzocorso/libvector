@@ -35,6 +35,12 @@ vector_t string_to_vector(const char string[]);
 /* Fill all components of a vector with a new value */
 void fill_vector(const vector_t vector, const double new_value);
 
+/* Increase vector dimension and push a new element in the selected position */
+void vector_push(const vector_t vector, const double new_value, const unsigned int position);
+
+/* Decrease vector dimension and pop a element from the selected position */
+void vector_pop(const vector_t vector, const unsigned int position);
+
 /* Return the sum of two vectors */
 vector_t sum_vector(const vector_t vector1, const vector_t vector2);
 
@@ -52,5 +58,8 @@ double vector_magnitude(const vector_t vector);
 
 /* Calculate the normalized vector */
 void vector_normalize(const vector_t vector);
+
+/* Calculate the angle in radians between two vectors */
+double vector_angle(const vector_t vector1, const vector_t vector2);
 
 #endif /* LIBVECTOR_H */

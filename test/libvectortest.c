@@ -51,6 +51,29 @@ void vector_setup_test()
 
 	puts("fill_vector test passed\n\n");
 
+	puts("==== vector_push test ====");
+	fill_vector(vector1, 1.0);
+	vector_push(vector1, 2.0, 1);
+	
+	assert(vector1->components[1] == 2.0);
+	for(unsigned int i = 0; i < vector1->dimension; i++)
+		if(i != 1)
+			assert(vector1->components[i] == 1.0);
+
+	destroy_vector(&vector1);
+	vector1 = create_vector(4);
+	puts("vector_push test passed\n\n");
+
+	puts("==== vector_pop test ====");
+	fill_vector(vector1, 1);
+	vector1->components[1] = 2.0;
+	vector_pop(vector1, 1);
+
+	for(unsigned int i = 0; i < vector1->dimension; i++)
+		assert(vector1->components[i] == 1.0);
+
+	puts("vector_pop test passed\n\n");
+
 	puts("==== copy_vector test ====");
 	fill_vector(vector1, 3.0);
 	vector2 = copy_vector(vector1);
@@ -129,6 +152,16 @@ void vector_operations_test()
 	assert(vector_magnitude(vector1) == 1.0);
 
 	puts("vector_normalize test passed\n\n");
+
+	puts("==== vector_angle test ====");
+	fill_vector(vector1, 1.0);
+	fill_vector(vector2, 1.0);
+	vector2->components[1] = -2.0;
+
+	double angle = vector_angle(vector1, vector2);
+	assert(angle >= 1.56 && angle <= 1.58);
+
+	puts("vector_angle test passed\n\n");
 
 	destroy_vector(&vector1);
 	destroy_vector(&vector2);
