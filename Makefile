@@ -1,10 +1,10 @@
 CFLAGS		=	-Wall
 LIB_PATH	=	-L$(CURDIR)/lib
 INC_PATH	=	-I$(CURDIR)/include
-LIBS		=	-l:libvector.a -lm
+LIBS		=	-l:libvector.a -lm -lcheck
 
 all:
-	@mkdir -p lib # Create lib folder if not exists
+	@mkdir -p lib # Create lib folder if not exist
 	@$(MAKE) -C src -f src.mk HOME="$(CURDIR)"
 
 .PHONY: clean test leaks

@@ -1,180 +1,190 @@
 #include <stdio.h>
-#include <assert.h>
+#include <check.h>
 #include "libvector.h"
 
-void vector_initialization_test()
+START_TEST(create_vector_test)
 {
 	vector_t vector = NULL;
-
-	puts("==== create_vector test ====");
 	vector = create_vector(4);
-
-	assert(vector != NULL);
-	assert(vector->dimension == 4);
+	ck_assert_ptr_nonnull(vector);
+	ck_assert_uint_eq(vector->dimension, 4);
 	for(unsigned int i = 0; i < vector->dimension; i++)
-		assert(vector->components[i] == 0.0);
-
-	puts("create_vector test passed\n\n");
-
-	puts("==== destroy_vector test ====");
-	destroy_vector(&vector);
-	assert(vector == NULL);
-	puts("destroy_vector test passed\n\n");
-}
-
-void vector_print_test()
-{
-	vector_t vector = create_vector(4);
-
-	puts("==== printf_vector test ====");
-	printf_vector(vector, "%.1f\t");
-	puts("printf_vector test passed\n\n");
-
-	puts("==== print_vector test ====");
-	print_vector(vector);
-	puts("print_vector test passed\n\n");
+		ck_assert_double_eq(vector->components[i], 0.0);
 
 	destroy_vector(&vector);
+	ck_assert_ptr_null(vector);
 }
+END_TEST
 
-void vector_setup_test()
+START_TEST(string_to_vector_test)
 {
-	vector_t vector1 = create_vector(4);
-	vector_t vector2 = NULL;
-	vector_t vector3 = NULL;
+	vector_t vector = string_to_vector("30.0,3.5,4.2");
+	ck_assert_double_eq(vector->components[0], 30.0);
+	ck_assert_double_eq(vector->components[1], 3.5);
+	ck_assert_double_eq(vector->components[2], 4.2);
+	destroy_vector(&vector);
+}
+END_TEST
 
-	puts("==== fill_vector test ====");
-	fill_vector(vector1, 30.0);
+START_TEST(vector_push_test)
+{
+	vector_t vector = string_to_vector("1,1,1,1");
+	vector_push(vector, 2.0, 1);
+	ck_assert_double_eq(vector->components[1], 2.0);
+	for(unsigned int i = 0; i < vector->dimension; i++)
+		if(i != 1) ck_assert_double_eq(vector->components[i], 1.0);
+	destroy_vector(&vector);
+}
+END_TEST
 
-	for(unsigned int i = 0; i < vector1->dimension; i++)
-		assert(vector1->components[i] == 30.0);
+START_TEST(vector_pop_test)
+{
+	vector_t vector = string_to_vector("1,1,1,1");
+	vector->components[1] = 2.0;
+	vector_pop(vector, 1);
+	for(unsigned int i = 0; i < vector->dimension; i++)
+		ck_assert_double_eq(vector->components[i], 1.0);
+	destroy_vector(&vector);
+}
+END_TEST
 
-	puts("fill_vector test passed\n\n");
-
-	puts("==== vector_push test ====");
-	fill_vector(vector1, 1.0);
-	vector_push(vector1, 2.0, 1);
-	
-	assert(vector1->components[1] == 2.0);
-	for(unsigned int i = 0; i < vector1->dimension; i++)
-		if(i != 1)
-			assert(vector1->components[i] == 1.0);
-
-	destroy_vector(&vector1);
-	vector1 = create_vector(4);
-	puts("vector_push test passed\n\n");
-
-	puts("==== vector_pop test ====");
-	fill_vector(vector1, 1);
-	vector1->components[1] = 2.0;
-	vector_pop(vector1, 1);
-
-	for(unsigned int i = 0; i < vector1->dimension; i++)
-		assert(vector1->components[i] == 1.0);
-
-	puts("vector_pop test passed\n\n");
-
-	puts("==== copy_vector test ====");
-	fill_vector(vector1, 3.0);
-	vector2 = copy_vector(vector1);
-
+START_TEST(copy_vector_test)
+{
+	vector_t vector1 = string_to_vector("3,3,3,3");
+	vector_t vector2 = copy_vector(vector1);
 	for(unsigned int i = 0; i < vector2->dimension; i++)
-		assert(vector2->components[i] == 3.0);
+		ck_assert_double_eq(vector2->components[i], 3.0);
+	destroy_vector(&vector1);
+	destroy_vector(&vector2);
+}
+END_TEST
 
-	puts("copy_vector test passed\n\n");
+START_TEST(fill_vector_test)
+{
+	vector_t vector = string_to_vector("30,30,30,30");
+	for(unsigned int i = 0; i < vector->dimension; i++)
+		ck_assert_double_eq(vector->components[i], 30.0);
+	destroy_vector(&vector);
+}
+END_TEST
 
-	puts("==== string_to_vector test ====");
-	vector3 = string_to_vector("30.0,3.5,4.2");
-
-	assert(vector3->components[0] == 30.0 && vector3->components[1] == 3.5 && vector3->components[2] == 4.2);
-
-	puts("string_to_vector test passed\n\n");
-
+START_TEST(sum_vector_test)
+{
+	vector_t vector1 = string_to_vector("1,1,1");
+	vector_t vector2 = string_to_vector("1,1,1");
+	vector_t vector3 = sum_vector(vector1, vector2);
+	for(unsigned int i = 0; i < vector3->dimension; i++)
+		ck_assert_double_eq(vector3->components[i], 2.0);
 	destroy_vector(&vector1);
 	destroy_vector(&vector2);
 	destroy_vector(&vector3);
 }
+END_TEST
 
-void vector_operations_test()
+START_TEST(dot_procuct_test)
 {
-	vector_t vector1 = create_vector(3);
-	vector_t vector2 = create_vector(3);
-	vector_t vector3 = NULL, vector4 = NULL;
+	vector_t vector1 = string_to_vector("1,1,1");
+	vector_t vector2 = string_to_vector("2,2,2");
+	ck_assert_double_eq(dot_product(vector1, vector2), 6.0);
+	destroy_vector(&vector1);
+	destroy_vector(&vector2);
+}
+END_TEST
 
-	puts("==== sum_vector test ====");
-	fill_vector(vector1, 1.0);
-	fill_vector(vector2, 1.0);
-	vector3 = sum_vector(vector1, vector2);
-
+START_TEST(cross_product_test)
+{
+	vector_t vector1 = string_to_vector("1,1,1");
+	vector_t vector2 = string_to_vector("2,2,2");
+	vector_t vector3 = cross_product(vector1, vector2);
 	for(unsigned int i = 0; i < vector3->dimension; i++)
-		assert(vector3->components[i] == 2.0);
-
-	puts("sum_vector test passed\n\n");
-
-	puts("==== dot_product test ====");
-	fill_vector(vector1, 1.0);
-	fill_vector(vector2, 2.0);
-
-	assert(dot_product(vector1, vector2) == 6.0);
-
-	puts("dot_product test passed\n\n");
-
-	puts("==== cross_product test ====");
-	fill_vector(vector1, 1.0);
-	fill_vector(vector2, 2.0);
-	vector4 = cross_product(vector1, vector2);
-	for(unsigned int i = 0; i < vector4->dimension; i++)
-		assert(vector4->components[i] == 0.0);
-
-	puts("cross_product test passed\n\n");
-
-	puts("==== vector_scalar_multiplication test ====");
-	fill_vector(vector1, 3.0);
-	vector_scalar_multiplication(vector1, 10.0);
-
-	for(unsigned int i = 0; i < vector1->dimension; i++)
-		assert(vector1->components[i] == 30.0);
-
-	puts("vector_scalar_multiplication test passed\n\n");
-
-	puts("==== vector_magnitude test ====");
-	fill_vector(vector1, 0.0);
-	vector1->components[2] = 1.0;
-
-	assert(vector_magnitude(vector1) == 1.0);
-
-	puts("vector_magnitude test passed\n\n");
-
-	puts("==== vector_normalize test ====");
-	fill_vector(vector1, 2.0);
-	vector_normalize(vector1);
-
-	assert(vector_magnitude(vector1) == 1.0);
-
-	puts("vector_normalize test passed\n\n");
-
-	puts("==== vector_angle test ====");
-	fill_vector(vector1, 1.0);
-	fill_vector(vector2, 1.0);
-	vector2->components[1] = -2.0;
-
-	double angle = vector_angle(vector1, vector2);
-	assert(angle >= 1.56 && angle <= 1.58);
-
-	puts("vector_angle test passed\n\n");
-
+		ck_assert_double_eq(vector3->components[i], 0.0);
 	destroy_vector(&vector1);
 	destroy_vector(&vector2);
 	destroy_vector(&vector3);
-	destroy_vector(&vector4);
+}
+END_TEST
+
+START_TEST(vector_scalar_multiplication_test)
+{
+	vector_t vector = string_to_vector("3,3,3");
+	vector_scalar_multiplication(vector, 10.0);
+	for(unsigned int i = 0; i < vector->dimension; i++)
+		ck_assert_double_eq(vector->components[i], 30.0);
+	destroy_vector(&vector);
+}
+END_TEST
+
+START_TEST(vector_magnitude_test)
+{
+	vector_t vector = create_vector(3);
+	vector->components[2] = 1.0;
+	ck_assert_double_eq(vector_magnitude(vector), 1.0);
+	destroy_vector(&vector);
+}
+END_TEST
+
+START_TEST(vector_normalize_test)
+{
+	vector_t vector = string_to_vector("2,2,2");
+	vector_normalize(vector);
+	ck_assert_double_eq(vector_magnitude(vector), 1.0);
+	destroy_vector(&vector);
+}
+END_TEST
+
+START_TEST(vector_angle_test)
+{
+	vector_t vector1 = string_to_vector("1,1,1");
+	vector_t vector2 = string_to_vector("1,1,1");
+	vector2->components[1] = -2.0;
+	double angle = vector_angle(vector1, vector2);
+	ck_assert_double_ge(angle, 1.56);
+	ck_assert_double_le(angle, 1.58);
+	destroy_vector(&vector1);
+	destroy_vector(&vector2);
+}
+END_TEST
+
+Suite *libvector_suite(void)
+{
+	Suite *suite = suite_create("libvector_suite");
+
+	TCase *tc_vector_instance = tcase_create("vector_instance");
+	tcase_add_test(tc_vector_instance, create_vector_test);
+	tcase_add_test(tc_vector_instance, string_to_vector_test);
+	tcase_add_test(tc_vector_instance, copy_vector_test);
+	suite_add_tcase(suite, tc_vector_instance);
+
+	TCase *tc_vector_initialization = tcase_create("vector_initialization");
+	tcase_add_test(tc_vector_initialization, vector_push_test);
+	tcase_add_test(tc_vector_initialization, vector_pop_test);
+	tcase_add_test(tc_vector_initialization, fill_vector_test);
+	suite_add_tcase(suite, tc_vector_initialization);
+
+	TCase *tc_vector_operations = tcase_create("vector_operations");
+	tcase_add_test(tc_vector_operations, sum_vector_test);
+	tcase_add_test(tc_vector_operations, dot_procuct_test);
+	tcase_add_test(tc_vector_operations, cross_product_test);
+	tcase_add_test(tc_vector_operations, vector_scalar_multiplication_test);
+	suite_add_tcase(suite, tc_vector_operations);
+
+	TCase *tc_vector_properties = tcase_create("vector_properties");
+	tcase_add_test(tc_vector_properties, vector_magnitude_test);
+	tcase_add_test(tc_vector_properties, vector_normalize_test);
+	tcase_add_test(tc_vector_properties, vector_angle_test);
+	suite_add_tcase(suite, tc_vector_properties);
+
+	return suite;
 }
 
 int main()
 {
-	vector_initialization_test();
-	vector_print_test();
-	vector_setup_test();
-	vector_operations_test();
+	Suite *suite = libvector_suite();
+	SRunner *runner = srunner_create(suite);
 
-	return 0;
+	srunner_run_all(runner, CK_NORMAL);
+	int number_failed = srunner_ntests_failed(runner);
+	srunner_free(runner);
+
+	return (number_failed == 0) ? 0 : 1;
 }
