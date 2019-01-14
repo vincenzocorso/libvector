@@ -6,3 +6,6 @@
 
 # Ignore test file
 test/libvectortest
+
+# Ingnore vscode folder
+.vscode/
