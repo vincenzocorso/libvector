@@ -1,4 +1,4 @@
-CFLAGS	=	-Wall
+CFLAGS	=	-Wall -std=c11
 BUILD	=	$(HOME)/lib
 INC	=	-I$(HOME)/include
 

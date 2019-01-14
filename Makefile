@@ -1,4 +1,4 @@
-CFLAGS		=	-Wall
+CFLAGS		=	-Wall -std=c11
 LIB_PATH	=	-L$(CURDIR)/lib
 INC_PATH	=	-I$(CURDIR)/include
 LIBS		=	-l:libvector.a -lm -lcheck
