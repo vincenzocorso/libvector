@@ -1,5 +1,7 @@
-# libvector: A simple C vector library
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+﻿# libvector: A simple C vector library
+[![Build Status](https://travis-ci.com/vincenzocorso/libvector.svg?token=gZvgq4ygyQjdGiqvUYN4&branch=master)](https://travis-ci.com/vincenzocorso/libvector) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2e6db9f3220e4f2db81c25ec806e1f1a)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vincenzocorso/libvector&amp;utm_campaign=Badge_Grade)
+
+
 Libvector is a simple library to work with math vector.
 
 Author: Vincenzo Corso <[vincenzocorso99@gmail.com](mailto:vincenzocorso99@gmail.com)>
@@ -50,7 +52,7 @@ destroy_vector(&vector);
 ```
 
 ### Vector operations
-#### Sum:
+#### Sum
 ```c
 vector_t vector1 = string_to_vector("1,2,3,1");
 vector_t vector2 = string_to_vector("3,4,1,2");
@@ -61,7 +63,7 @@ destroy_vector(&vector1);
 destroy_vector(&vector2);
 destroy_vector(&vector3);
 ```
-#### Dot product:
+#### Dot product
 ```c
 vector_t vector1 = string_to_vector("1,4,1,4");
 vector_t vector2 = string_to_vector("3,3,1,1");
@@ -72,7 +74,7 @@ destroy_vector(&vector1);
 destroy_vector(&vector2);
 ```
 
-### Cross product:
+#### Cross product
 ```c
 vector_t vector1 = string_to_vector("1,4,1");
 vector_t vector2 = string_to_vector("3,3,1");
@@ -84,7 +86,7 @@ destroy_vector(&vector2);
 destroy_vector(&result);
 ```
 
-### Scalar multiplication
+#### Scalar multiplication
 ```c
 vector_t vector1 = string_to_vector("1,4,1");
 vector_scalar_multiplication(vector1, 2.1); // Overwrite the vector
@@ -93,7 +95,7 @@ print_vector(result); // Print '2.1 8.4 2.1'
 destroy_vector(&vector1);
 ```
 
-### Vector normalitation and magnitude
+#### Vector normalitation and magnitude
 ```c
 vector_t vector1 = string_to_vector("1,4,1");
 vector_normalize(vector1); // Overwrite the vector
@@ -120,7 +122,7 @@ destroy_vector(&vector1);
 destroy_vector(&vector2);
 ```
 
-### Memory Leaks
+### Memory leaks
 Pay attention to not change vector rvalue before destroying it.
 ```c
 vector_t vector1 = create_vector(5);
