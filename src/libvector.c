@@ -98,8 +98,8 @@ void vector_push(const vector_t vector, const double new_value, const unsigned i
 
 	vector->components = (double *)realloc(vector->components, (vector->dimension + 1) * sizeof(double));
 	memmove(vector->components + position + 1, vector->components + position, (vector->dimension - position) * sizeof(double));
-	vector->dimension += 1;
 	vector->components[position] = new_value;
+	(vector->dimension)++;
 }
 
 /* Decrease vector dimension and pop a element from the selected position */
@@ -110,7 +110,7 @@ void vector_pop(const vector_t vector, const unsigned int position)
 
 	memmove(vector->components + position, vector->components + position + 1, (vector->dimension - position - 1) * sizeof(double));
 	vector->components = (double *)realloc(vector->components, (vector->dimension - 1) * sizeof(double));
-	vector->dimension -= 1;
+	(vector->dimension)--;
 }
 
 /* Return the sum of two vectors */
@@ -164,6 +164,16 @@ void vector_scalar_multiplication(const vector_t vector, const double scalar)
 		vector->components[i] *= scalar;
 }
 
+/* Add a scalar to vector components */
+void vector_add_scalar(const vector_t vector, const double scalar)
+{
+	if(vector == NULL)
+		return;
+
+	for(unsigned int i = 0; i < vector->dimension; i++)
+		vector->components[i] += scalar;
+}
+
 /* Calculate the magnitude of a vector */
 double vector_magnitude(const vector_t vector)
 {
@@ -198,4 +208,67 @@ double vector_angle(const vector_t vector1, const vector_t vector2)
 	double lenght1 = vector_magnitude(vector1);
 	double lenght2 = vector_magnitude(vector2);
 	return acos(dp / (lenght1 * lenght2));
+}
+
+/* Return the max component index from a vector */
+int max_vector_component(const vector_t vector)
+{
+	if(vector == NULL)
+		return -1;
+
+	unsigned int max_index = 0;
+	for(unsigned int i = 1; i < vector->dimension; i++)
+		if(vector->components[i] > vector->components[max_index])
+			max_index = i;
+
+	return max_index;
+}
+
+/* Return the min component index from a vector */
+int min_vector_component(const vector_t vector)
+{
+	if(vector == NULL)
+		return -1;
+
+	unsigned int min_index = 0;
+	for(unsigned int i = 1; i < vector->dimension; i++)
+		if(vector->components[i] < vector->components[min_index])
+			min_index = i;
+
+	return min_index;
+}
+
+/* Check if a vector is a zero vector */
+int is_zero_vector(const vector_t vector)
+{
+	if(vector == NULL)
+		return 0;
+
+	for(unsigned int i = 0; i < vector->dimension; i++)
+		if(vector->components[i] != 0)
+			return 0;
+
+	return 1;
+}
+
+/* Check if two vectors are parallel */
+int is_parallel_to(const vector_t vector1, const vector_t vector2)
+{
+	if(vector1 == NULL || vector2 == NULL || vector1->dimension != vector2->dimension)
+		return 0;
+
+	vector_t vector = cross_product(vector1, vector2);
+	int result = is_zero_vector(vector);
+	destroy_vector(&vector);
+
+	return result;
+}
+
+/* Check if two vectors are perpendicular */
+int is_perpendicular_to(const vector_t vector1, const vector_t vector2)
+{
+	if(vector1 == NULL || vector2 == NULL || vector1->dimension != vector2->dimension)
+		return 0;
+
+	return !dot_product(vector1, vector2);	
 }

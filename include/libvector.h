@@ -53,6 +53,9 @@ vector_t cross_product(const vector_t vector1, const vector_t vector2);
 /* Calculate the product beetween a vector and a scalar */
 void vector_scalar_multiplication(const vector_t vector, const double scalar);
 
+/* Add a scalar to vector components */
+void vector_add_scalar(const vector_t vector, const double scalar);
+
 /* Calculate the magnitude of a vector */
 double vector_magnitude(const vector_t vector);
 
@@ -61,5 +64,20 @@ void vector_normalize(const vector_t vector);
 
 /* Calculate the angle in radians between two vectors */
 double vector_angle(const vector_t vector1, const vector_t vector2);
+
+/* Return the max component index from a vector */
+int max_vector_component(const vector_t vector);
+
+/* Return the min component index from a vector */
+int min_vector_component(const vector_t vector);
+
+/* Check if a vector is a zero vector */
+int is_zero_vector(const vector_t vector);
+
+/* Check if two vectors are parallel */
+int is_parallel_to(const vector_t vector1, const vector_t vector2);
+
+/* Check if two vectors are perpendicular */
+int is_perpendicular_to(const vector_t vector1, const vector_t vector2);
 
 #endif /* LIBVECTOR_H */
