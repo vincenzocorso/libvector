@@ -1,5 +1,5 @@
 #ifndef LIBVECTOR_H
-	#define LIBVECTOR_H
+#define LIBVECTOR_H
 
 /* Defines */
 #define DEFAULT_VECTOR_FORMAT_SPECIFIER		"%.2f "
@@ -55,6 +55,9 @@ void vector_scalar_multiplication(const vector_t vector, const double scalar);
 
 /* Add a scalar to vector components */
 void vector_add_scalar(const vector_t vector, const double scalar);
+
+/* Calculate the absolute value of vector components */
+void vector_abs(const vector_t vector);
 
 /* Calculate the magnitude of a vector */
 double vector_magnitude(const vector_t vector);

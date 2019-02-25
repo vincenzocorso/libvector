@@ -174,6 +174,17 @@ void vector_add_scalar(const vector_t vector, const double scalar)
 		vector->components[i] += scalar;
 }
 
+/* Calculate the absolute value of vector components */
+void vector_abs(const vector_t vector)
+{
+	if(vector == NULL)
+		return;
+
+	for(unsigned int i = 0; i < vector->dimension; i++)
+		if(vector->components[i] < 0)
+			vector->components[i] *= -1;
+}
+
 /* Calculate the magnitude of a vector */
 double vector_magnitude(const vector_t vector)
 {

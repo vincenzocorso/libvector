@@ -124,19 +124,29 @@ START_TEST(vector_add_scalar_test)
 }
 END_TEST
 
-START_TEST(vector_magnitude_test)
+START_TEST(vector_normalize_test)
 {
-	vector_t vector = create_vector(3);
-	vector->components[2] = 1.0;
+	vector_t vector = string_to_vector("2,2,2");
+	vector_normalize(vector);
 	ck_assert(vector_magnitude(vector) == 1.0);
 	destroy_vector(&vector);
 }
 END_TEST
 
-START_TEST(vector_normalize_test)
+START_TEST(vector_abs_test)
 {
-	vector_t vector = string_to_vector("2,2,2");
-	vector_normalize(vector);
+	vector_t vector = string_to_vector("-4,-4,-4");
+	vector_abs(vector);
+	for(unsigned int i = 0; i < vector->dimension; i++)
+		ck_assert(vector->components[i] == 4.0);
+	destroy_vector(&vector);
+}
+END_TEST
+
+START_TEST(vector_magnitude_test)
+{
+	vector_t vector = create_vector(3);
+	vector->components[2] = 1.0;
 	ck_assert(vector_magnitude(vector) == 1.0);
 	destroy_vector(&vector);
 }
@@ -225,11 +235,12 @@ Suite *libvector_suite(void)
 	tcase_add_test(tc_vector_operations, cross_product_test);
 	tcase_add_test(tc_vector_operations, vector_scalar_multiplication_test);
 	tcase_add_test(tc_vector_operations, vector_add_scalar_test);
+	tcase_add_test(tc_vector_operations, vector_abs_test);
 	suite_add_tcase(suite, tc_vector_operations);
 
 	TCase *tc_vector_properties = tcase_create("vector_properties");
 	tcase_add_test(tc_vector_properties, vector_magnitude_test);
-	tcase_add_test(tc_vector_properties, vector_normalize_test);
+	tcase_add_test(tc_vector_operations, vector_normalize_test);
 	tcase_add_test(tc_vector_properties, vector_angle_test);
 	tcase_add_test(tc_vector_properties, max_vector_component_test);
 	tcase_add_test(tc_vector_properties, min_vector_component_test);
