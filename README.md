@@ -1,4 +1,4 @@
-# A simple C math vector library
+﻿# A simple C math vector library
 [![Build Status](https://travis-ci.com/vincenzocorso/libvector.svg?token=gZvgq4ygyQjdGiqvUYN4&branch=master)](https://travis-ci.com/vincenzocorso/libvector) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2e6db9f3220e4f2db81c25ec806e1f1a)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vincenzocorso/libvector&amp;utm_campaign=Badge_Grade)
 
 Libvector is a simple library that allows you to work with math vectors in <img src="https://latex.codecogs.com/gif.latex?\dpi{120}&space;\large&space;\mathbb{R}^{n}" /> 
@@ -8,14 +8,17 @@ Author: Vincenzo Corso <[vincenzocorso99@gmail.com](mailto:vincenzocorso99@gmail
 License: MIT (see [LICENSE](https://github.com/vincenzocorso/libvector/blob/master/LICENSE)  for details)
 
 ## Installation
-Download...
-
-To do...
-
-Include `libvector.h` header file at the top of the file:
-```c
-#include "libvector.h"
 ```
+$ make setup
+$ make
+$ sudo make install
+```
+
+Include `libvector.h` header file at the top of the file ....
+```c
+#include <libvector.h>
+```
+... and compile using `-llibvector -lm`
 
 ## Usage
 It's very simple and intuitive. These are some examples of usage.
@@ -133,7 +136,7 @@ vector_t vector1 = string_to_vector("1,4,1");
 vector_normalize(vector1); // Overwrite the vector
 print_vector(vector1); // Print '0.24 0.94 0.24'
 double magnitude = vector_magnitude(vector1);
-printf("Mangnitude: %.2f\n", magnitude); // Print 1.00
+printf("Magnitude: %.2f\n", magnitude); // Print 1.00
 
 destroy_vector(&vector1);
 ```
