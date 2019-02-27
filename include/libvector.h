@@ -29,9 +29,6 @@ void printf_vector(const vector_t vector, const char *format);
 /* Copy a vector */
 vector_t copy_vector(const vector_t vector);
 
-/* Create a new vector using a string */
-vector_t string_to_vector(const char string[]);
-
 /* Fill all components of a vector with a new value */
 void fill_vector(const vector_t vector, const double new_value);
 

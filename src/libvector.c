@@ -54,32 +54,6 @@ vector_t copy_vector(const vector_t vector)
 	return result;
 }
 
-/* Create a new vector using a string */
-vector_t string_to_vector(const char string[])
-{
-	size_t lenght = strlen(string);
-	if(!lenght)
-		return NULL;
-
-	unsigned int dimension = 0;
-	for(unsigned int i = 0; i < lenght; i++)
-		if(string[i] == ',')
-			dimension++;
-
-	vector_t vector = create_vector(dimension + 1);
-	
-	char copy[lenght + 1];
-	strcpy(copy, string);
-	char *token = strtok(copy, ",");
-	for(unsigned int i = 0; token != NULL; i++)
-	{
-		vector->components[i] = atof(token);
-		token = strtok(NULL, ",");
-	}
-
-	return vector;
-}
-
 /* Fill all components of a vector with a new value */
 void fill_vector(const vector_t vector, const double new_value)
 {
