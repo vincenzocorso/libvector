@@ -57,4 +57,4 @@ clean:
 leaks:
 	@echo "Checking memory leaks..."
 	@$(foreach file, $(TESTS), \
-	valgrind --leak-check=yes ./$(basename $(file)); )
+	valgrind --leak-check=full --show-leak-kinds=all ./$(basename $(file)); )
