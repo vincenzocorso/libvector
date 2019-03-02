@@ -73,9 +73,7 @@ vector_t vector2 = create_vector(4, (double []){3, 4, 1, 2});
 vector_t sum = sum_vector(vector1, vector2);
 printf_vector(sum, "%.0f "); // Print '4 6 4 3'
 
-destroy_vector(&vector1);
-destroy_vector(&vector2);
-destroy_vector(&sum);
+destroy_vectors(3, &vector1, &vector2, &sum); // Destroy many vectors at once
 ```
 #### Dot product
 ```c
@@ -84,8 +82,7 @@ vector_t vector2 = create_vector(4, (double []){3, 3, 1, 1});
 double result = dot_product(vector1, vector2);
 printf("Dot product: %.2f\n", result); // Calculate 1*3 + 4*3 + 1*1 + 4*1. Print 20.00
 
-destroy_vector(&vector1);
-destroy_vector(&vector2);
+destroy_vectors(2, &vector1, &vector2);
 ```
 
 #### Cross product
@@ -95,9 +92,7 @@ vector_t vector2 = create_vector(3, (double []){3, 3, 1});
 vector_t result = cross_product(vector1, vector2);
 printf_vector(result, "%.0f "); // Print '1 -2 -9'
 
-destroy_vector(&vector1);
-destroy_vector(&vector2);
-destroy_vector(&result);
+destroy_vector(3, &vector1, &vector2, &result);
 ```
 
 #### Scalar multiplication
@@ -156,8 +151,7 @@ printf("result1: %d | result2: %d | result3: %d\n", result1, result2, result3); 
 double angle = vector_angle(vector1, vector2); // Calculate the angle in radians between vector1 and vector2
 printf("angle: %.2f\n", angle); // Printf '0.00' because the two vectors are parallel
 
-destroy_vector(&vector1);
-destroy_vector(&vector2);
+destroy_vector(2, &vector1, &vector2);
 ```
 
 ### Other stuff
@@ -165,6 +159,7 @@ If you want to access to vector dimension or single vector component:
 ```c
 vector_t vector1 = create_vector(4, (double []){4, 4, 1, 2});
 printf("%u %.0f\n", vector1->dimension, vector1->component[3]); // Print '4 2'
+destroy_vector(&vector1);
 ```
 
 If you want to duplicate an existing vector use `copy_vector`:
@@ -172,8 +167,7 @@ If you want to duplicate an existing vector use `copy_vector`:
 vector_t vector1 = create_vector(4, (double []){2, 4, 5, 1});
 vector_t vector2 = copy_vector(vector1);
 print_vector(vector2); // Print '2.00 4.00 5.00 1.00'
-destroy_vector(&vector1);
-destroy_vector(&vector2);
+destroy_vectors(2, &vector1, &vector2);
 ```
 
 ### Memory leaks
