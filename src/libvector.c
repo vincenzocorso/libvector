@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <math.h>
+
+#include <stdarg.h>
 #include "libvector.h"
 
 /* Create a zero vector and return pointer to it */
@@ -38,6 +40,18 @@ void destroy_vector(vector_t *vector)
 	free((*vector)->components);
 	free(*vector);
 	*vector = NULL;
+}
+
+/* Delete the vectors passed by argument */
+void destroy_vectors(int numargs, ...)
+{
+	va_list list;
+	va_start(list, numargs);
+	for(int i = 0; i < numargs; i++)
+	{
+		vector_t *arg = va_arg(list, vector_t *);
+		destroy_vector(arg);
+	}
 }
 
 /* Print the components of a vector using custom format specifier */

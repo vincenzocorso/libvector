@@ -27,14 +27,23 @@ START_TEST(create_vector_test)
 }
 END_TEST
 
+START_TEST(destroy_vectors_test)
+{
+	vector_t vector1 = create_zero_vector(3);
+	vector_t vector2 = create_zero_vector(4);
+	vector_t vector3 = create_zero_vector(7);
+	destroy_vectors(3, &vector1, &vector2, &vector3);
+	ck_assert(vector1 == NULL && vector2 == NULL && vector3 == NULL);
+}
+END_TEST
+
 START_TEST(copy_vector_test)
 {
 	vector_t vector1 = create_vector(4, (double []){3, 3, 3, 3});
 	vector_t vector2 = copy_vector(vector1);
 	for(unsigned int i = 0; i < vector2->dimension; i++)
 		ck_assert(vector2->components[i] == 3.0);
-	destroy_vector(&vector1);
-	destroy_vector(&vector2);
+	destroy_vectors(2, &vector1, &vector2);
 }
 END_TEST
 
@@ -75,9 +84,7 @@ START_TEST(sum_vector_test)
 	vector_t vector3 = sum_vector(vector1, vector2);
 	for(unsigned int i = 0; i < vector3->dimension; i++)
 		ck_assert(vector3->components[i] == 2.0);
-	destroy_vector(&vector1);
-	destroy_vector(&vector2);
-	destroy_vector(&vector3);
+	destroy_vectors(3, &vector1, &vector2, &vector3);
 }
 END_TEST
 
@@ -86,8 +93,7 @@ START_TEST(dot_procuct_test)
 	vector_t vector1 = create_vector(3, (double []){1, 1, 1});
 	vector_t vector2 = create_vector(3, (double []){2, 2, 2});
 	ck_assert(dot_product(vector1, vector2) == 6.0);
-	destroy_vector(&vector1);
-	destroy_vector(&vector2);
+	destroy_vectors(2, &vector1, &vector2);
 }
 END_TEST
 
@@ -98,9 +104,7 @@ START_TEST(cross_product_test)
 	vector_t vector3 = cross_product(vector1, vector2);
 	for(unsigned int i = 0; i < vector3->dimension; i++)
 		ck_assert(vector3->components[i] == 0.0);
-	destroy_vector(&vector1);
-	destroy_vector(&vector2);
-	destroy_vector(&vector3);
+	destroy_vectors(3, &vector1, &vector2, &vector3);
 }
 END_TEST
 
@@ -157,8 +161,7 @@ START_TEST(vector_angle_test)
 	vector_t vector2 = create_vector(3, (double []){1, -2, 1});
 	double angle = vector_angle(vector1, vector2);
 	ck_assert(angle >= 1.56 && angle <= 1.58);
-	destroy_vector(&vector1);
-	destroy_vector(&vector2);
+	destroy_vectors(2, &vector1, &vector2);
 }
 END_TEST
 
@@ -194,8 +197,7 @@ START_TEST(is_parallel_to_test)
 	vector_t vector1 = create_vector(3, (double []){2, 3, 5});
 	vector_t vector2 = create_vector(3, (double []){6, 9, 15});
 	ck_assert(is_parallel_to(vector1, vector2) == 1);
-	destroy_vector(&vector1);
-	destroy_vector(&vector2);
+	destroy_vectors(2, &vector1, &vector2);
 }
 END_TEST
 
@@ -204,8 +206,7 @@ START_TEST(is_perpendicular_to_test)
 	vector_t vector1 = create_vector(3, (double []){2, 4, 5});
 	vector_t vector2 = create_vector(3, (double []){-7, 1, 2});
 	ck_assert(is_perpendicular_to(vector1, vector2) == 1);
-	destroy_vector(&vector1);
-	destroy_vector(&vector2);
+	destroy_vectors(2, &vector1, &vector2);
 }
 END_TEST
 
@@ -216,6 +217,7 @@ Suite *libvector_suite(void)
 	TCase *tc_vector_instance = tcase_create("vector_instance");
 	tcase_add_test(tc_vector_instance, create_zero_vector_test);
 	tcase_add_test(tc_vector_instance, create_vector_test);
+	tcase_add_test(tc_vector_instance, destroy_vectors_test);
 	tcase_add_test(tc_vector_instance, copy_vector_test);
 	suite_add_tcase(suite, tc_vector_instance);
 

@@ -26,6 +26,9 @@ vector_t create_vector(const unsigned int dimension, const double components[]);
 /* Delete a vector and free memory */
 void destroy_vector(vector_t *vector);
 
+/* Delete the vectors passed by argument */
+void destroy_vectors(int numargs, ...);
+
 /* Print the components of a vector using custom format specifier */
 void printf_vector(const vector_t vector, const char *format);
 
