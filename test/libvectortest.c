@@ -3,10 +3,9 @@
 #include <check.h>
 #include "libvector.h"
 
-START_TEST(create_vector_test)
+START_TEST(create_zero_vector_test)
 {
-	vector_t vector = NULL;
-	vector = create_vector(4);
+	vector_t vector = create_zero_vector(4);
 	ck_assert(vector != NULL);
 	ck_assert_uint_eq(vector->dimension, 4);
 	for(unsigned int i = 0; i < vector->dimension; i++)
@@ -17,10 +16,20 @@ START_TEST(create_vector_test)
 }
 END_TEST
 
+START_TEST(create_vector_test)
+{
+	vector_t vector = create_vector(4, (double []){0,1,2,3});
+	ck_assert(vector != NULL);
+	ck_assert(vector->dimension == 4);
+	for(unsigned int i = 0; i < vector->dimension; i++)
+		ck_assert(vector->components[i] == i);
+	destroy_vector(&vector);
+}
+END_TEST
+
 START_TEST(copy_vector_test)
 {
-	vector_t vector1 = create_vector(4);
-	memcpy(vector1->components, (double []){3, 3, 3, 3}, 4 * sizeof(double));
+	vector_t vector1 = create_vector(4, (double []){3, 3, 3, 3});
 	vector_t vector2 = copy_vector(vector1);
 	for(unsigned int i = 0; i < vector2->dimension; i++)
 		ck_assert(vector2->components[i] == 3.0);
@@ -31,8 +40,7 @@ END_TEST
 
 START_TEST(fill_vector_test)
 {
-	vector_t vector = create_vector(4);
-	memcpy(vector->components, (double []){30, 30, 30, 30}, 4 * sizeof(double));
+	vector_t vector = create_vector(4, (double []){30, 30, 30, 30});
 	for(unsigned int i = 0; i < vector->dimension; i++)
 		ck_assert(vector->components[i] == 30.0);
 	destroy_vector(&vector);
@@ -41,8 +49,7 @@ END_TEST
 
 START_TEST(vector_push_test)
 {
-	vector_t vector = create_vector(4);
-	memcpy(vector->components, (double []){1, 1, 1, 1}, 4 * sizeof(double));
+	vector_t vector = create_vector(4, (double []){1, 1, 1, 1});
 	vector_push(vector, 2.0, 1);
 	ck_assert(vector->components[1] == 2.0);
 	for(unsigned int i = 0; i < vector->dimension; i++)
@@ -53,8 +60,7 @@ END_TEST
 
 START_TEST(vector_pop_test)
 {
-	vector_t vector = create_vector(4);
-	memcpy(vector->components, (double []){1, 2, 1, 1}, 4 * sizeof(double));
+	vector_t vector = create_vector(4, (double []){1, 2, 1, 1});
 	vector_pop(vector, 1);
 	for(unsigned int i = 0; i < vector->dimension; i++)
 		ck_assert(vector->components[i] == 1.0);
@@ -64,8 +70,7 @@ END_TEST
 
 START_TEST(sum_vector_test)
 {
-	vector_t vector1 = create_vector(3);
-	memcpy(vector1->components, (double []){1, 1, 1}, 3 * sizeof(double));
+	vector_t vector1 = create_vector(3, (double []){1, 1, 1});
 	vector_t vector2 = copy_vector(vector1);
 	vector_t vector3 = sum_vector(vector1, vector2);
 	for(unsigned int i = 0; i < vector3->dimension; i++)
@@ -78,10 +83,8 @@ END_TEST
 
 START_TEST(dot_procuct_test)
 {
-	vector_t vector1 = create_vector(3);
-	vector_t vector2 = create_vector(3);
-	memcpy(vector1->components, (double []){1, 1, 1}, 3 * sizeof(double));
-	memcpy(vector2->components, (double []){2, 2, 2}, 3 * sizeof(double));
+	vector_t vector1 = create_vector(3, (double []){1, 1, 1});
+	vector_t vector2 = create_vector(3, (double []){2, 2, 2});
 	ck_assert(dot_product(vector1, vector2) == 6.0);
 	destroy_vector(&vector1);
 	destroy_vector(&vector2);
@@ -90,10 +93,8 @@ END_TEST
 
 START_TEST(cross_product_test)
 {
-	vector_t vector1 = create_vector(3);
-	vector_t vector2 = create_vector(3);
-	memcpy(vector1->components, (double []){1, 1, 1}, 3 * sizeof(double));
-	memcpy(vector2->components, (double []){2, 2, 2}, 3 * sizeof(double));
+	vector_t vector1 = create_vector(3, (double []){1, 1, 1});
+	vector_t vector2 = create_vector(3, (double []){2, 2, 2});
 	vector_t vector3 = cross_product(vector1, vector2);
 	for(unsigned int i = 0; i < vector3->dimension; i++)
 		ck_assert(vector3->components[i] == 0.0);
@@ -105,8 +106,7 @@ END_TEST
 
 START_TEST(vector_scalar_multiplication_test)
 {
-	vector_t vector = create_vector(3);
-	memcpy(vector->components, (double []){3, 3, 3}, 3 * sizeof(double));
+	vector_t vector = create_vector(3, (double []){3, 3, 3});
 	vector_scalar_multiplication(vector, 10.0);
 	for(unsigned int i = 0; i < vector->dimension; i++)
 		ck_assert(vector->components[i] == 30.0);
@@ -116,8 +116,7 @@ END_TEST
 
 START_TEST(vector_add_scalar_test)
 {
-	vector_t vector = create_vector(3);
-	memcpy(vector->components, (double []){1, 1, 1}, 3 * sizeof(double));
+	vector_t vector = create_vector(3, (double []){1, 1, 1});
 	vector_add_scalar(vector, 1.0);
 	for(unsigned int i = 0; i < vector->dimension; i++)
 		ck_assert(vector->components[i] == 2.0);
@@ -127,8 +126,7 @@ END_TEST
 
 START_TEST(vector_normalize_test)
 {
-	vector_t vector = create_vector(3);
-	memcpy(vector->components, (double []){2, 2, 2}, 3 * sizeof(double));
+	vector_t vector = create_vector(3, (double []){2, 2, 2});
 	vector_normalize(vector);
 	ck_assert(vector_magnitude(vector) == 1.0);
 	destroy_vector(&vector);
@@ -137,8 +135,7 @@ END_TEST
 
 START_TEST(vector_abs_test)
 {
-	vector_t vector = create_vector(3);
-	memcpy(vector->components, (double []){-4, -4, -4}, 3 * sizeof(double));
+	vector_t vector = create_vector(3, (double []){-4, -4, -4});
 	vector_abs(vector);
 	for(unsigned int i = 0; i < vector->dimension; i++)
 		ck_assert(vector->components[i] == 4.0);
@@ -148,8 +145,7 @@ END_TEST
 
 START_TEST(vector_magnitude_test)
 {
-	vector_t vector = create_vector(3);
-	vector->components[2] = 1.0;
+	vector_t vector = create_vector(3, (double []){0, 0, 1});
 	ck_assert(vector_magnitude(vector) == 1.0);
 	destroy_vector(&vector);
 }
@@ -157,10 +153,8 @@ END_TEST
 
 START_TEST(vector_angle_test)
 {
-	vector_t vector1 = create_vector(3);
-	vector_t vector2 = create_vector(3);
-	memcpy(vector1->components, (double []){1, 1, 1}, 3 * sizeof(double));
-	memcpy(vector2->components, (double []){1, -2, 1}, 3 * sizeof(double));
+	vector_t vector1 = create_vector(3, (double []){1, 1, 1});
+	vector_t vector2 = create_vector(3, (double []){1, -2, 1});
 	double angle = vector_angle(vector1, vector2);
 	ck_assert(angle >= 1.56 && angle <= 1.58);
 	destroy_vector(&vector1);
@@ -170,8 +164,7 @@ END_TEST
 
 START_TEST(max_vector_component_test)
 {
-	vector_t vector = create_vector(4);
-	memcpy(vector->components, (double []){1, 2, 5, -3}, 4 * sizeof(double));
+	vector_t vector = create_vector(4, (double []){1, 2, 5, -3});
 	int max_index = max_vector_component(vector);
 	ck_assert(max_index == 2);
 	destroy_vector(&vector);
@@ -180,8 +173,7 @@ END_TEST
 
 START_TEST(min_vector_component_test)
 {
-	vector_t vector = create_vector(4);
-	memcpy(vector->components, (double []){1, 2, 5, -3}, 4 * sizeof(double));
+	vector_t vector = create_vector(4, (double []){1, 2, 5, -3});
 	int min_index = min_vector_component(vector);
 	ck_assert(min_index == 3);
 	destroy_vector(&vector);
@@ -190,7 +182,7 @@ END_TEST
 
 START_TEST(is_zero_vector_test)
 {
-	vector_t vector = create_vector(4);
+	vector_t vector = create_zero_vector(4);
 	for(unsigned int i = 0; i < vector->dimension; i++)
 		ck_assert(vector->components[i] == 0.0);
 	destroy_vector(&vector);
@@ -199,10 +191,8 @@ END_TEST
 
 START_TEST(is_parallel_to_test)
 {
-	vector_t vector1 = create_vector(3);
-	vector_t vector2 = create_vector(3);
-	memcpy(vector1->components, (double []){2, 3, 5}, 3 * sizeof(double));
-	memcpy(vector2->components, (double []){6, 9, 15}, 3 * sizeof(double));
+	vector_t vector1 = create_vector(3, (double []){2, 3, 5});
+	vector_t vector2 = create_vector(3, (double []){6, 9, 15});
 	ck_assert(is_parallel_to(vector1, vector2) == 1);
 	destroy_vector(&vector1);
 	destroy_vector(&vector2);
@@ -211,10 +201,8 @@ END_TEST
 
 START_TEST(is_perpendicular_to_test)
 {
-	vector_t vector1 = create_vector(3);
-	vector_t vector2 = create_vector(3);
-	memcpy(vector1->components, (double []){2, 4, 5}, 3 * sizeof(double));
-	memcpy(vector2->components, (double []){-7, 1, 2}, 3 * sizeof(double));
+	vector_t vector1 = create_vector(3, (double []){2, 4, 5});
+	vector_t vector2 = create_vector(3, (double []){-7, 1, 2});
 	ck_assert(is_perpendicular_to(vector1, vector2) == 1);
 	destroy_vector(&vector1);
 	destroy_vector(&vector2);
@@ -226,6 +214,7 @@ Suite *libvector_suite(void)
 	Suite *suite = suite_create("libvector_suite");
 
 	TCase *tc_vector_instance = tcase_create("vector_instance");
+	tcase_add_test(tc_vector_instance, create_zero_vector_test);
 	tcase_add_test(tc_vector_instance, create_vector_test);
 	tcase_add_test(tc_vector_instance, copy_vector_test);
 	suite_add_tcase(suite, tc_vector_instance);

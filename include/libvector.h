@@ -18,7 +18,10 @@ typedef struct Vector *vector_t;
 
 /* Functions */
 /* Create a zero vector and return pointer to it */
-vector_t create_vector(const unsigned int dimension);
+vector_t create_zero_vector(const unsigned int dimension);
+
+/* Create a vector and return pointer to it */
+vector_t create_vector(const unsigned int dimension, const double components[]);
 
 /* Delete a vector and free memory */
 void destroy_vector(vector_t *vector);

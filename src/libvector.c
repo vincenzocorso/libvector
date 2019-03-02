@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <memory.h>
 #include <math.h>
 #include "libvector.h"
 
 /* Create a zero vector and return pointer to it */
-vector_t create_vector(const unsigned int dimension)
+vector_t create_zero_vector(const unsigned int dimension)
 {
 	if(!dimension)
 		return NULL;
@@ -13,6 +13,18 @@ vector_t create_vector(const unsigned int dimension)
 	vector_t vector = (vector_t)malloc(sizeof(struct Vector));
 	vector->dimension = dimension;
 	vector->components = (double *)calloc(dimension, sizeof(double));
+
+	return vector;
+}
+
+/* Create a vector and return pointer to it */
+vector_t create_vector(const unsigned int dimension, const double components[])
+{
+	if(!dimension)
+		return NULL;
+
+	vector_t vector = create_zero_vector(dimension);
+	memcpy(vector->components, components, vector->dimension * sizeof(double));
 
 	return vector;
 }
@@ -46,10 +58,8 @@ vector_t copy_vector(const vector_t vector)
 	if(vector == NULL)
 		return NULL;
 
-	vector_t result = create_vector(vector->dimension);
-
-	for(unsigned int i = 0; i < result->dimension; i++)
-		result->components[i] = vector->components[i];
+	vector_t result = create_zero_vector(vector->dimension);
+	memcpy(result->components, vector->components, result->dimension * sizeof(double));
 
 	return result;
 }
@@ -93,7 +103,7 @@ vector_t sum_vector(const vector_t vector1, const vector_t vector2)
 	if(vector1 == NULL || vector2 == NULL || vector1->dimension != vector2->dimension)
 		return NULL;
 
-	vector_t vector = create_vector(vector1->dimension);
+	vector_t vector = create_zero_vector(vector1->dimension);
 	for(unsigned int i = 0; i < vector->dimension; i++)
 		vector->components[i] = vector1->components[i] + vector2->components[i];
 
@@ -120,7 +130,7 @@ vector_t cross_product(const vector_t vector1, const vector_t vector2)
 	if(vector1 == NULL || vector2 == NULL || vector1->dimension != 3 || vector2->dimension != 3) // cross_product is defined in R^3
 		return NULL;
 
-	vector_t vector = create_vector(3);
+	vector_t vector = create_zero_vector(3);
 	vector->components[0] = vector1->components[1] * vector2->components[2] - vector1->components[2] * vector2->components[1];
 	vector->components[1] = vector1->components[2] * vector2->components[0] - vector1->components[0] * vector2->components[2];
 	vector->components[2] = vector1->components[0] * vector2->components[1] - vector1->components[1] * vector2->components[0];
