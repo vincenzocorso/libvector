@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <math.h>
-
 #include <stdarg.h>
 #include "libvector.h"
 
@@ -52,6 +51,7 @@ void destroy_vectors(int numargs, ...)
 		vector_t *arg = va_arg(list, vector_t *);
 		destroy_vector(arg);
 	}
+	va_end(list);
 }
 
 /* Print the components of a vector using custom format specifier */
